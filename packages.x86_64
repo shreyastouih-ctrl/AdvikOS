@@ -91,7 +91,9 @@ adwaita-icon-theme
 ttf-dejavu
 ttf-liberation
 
-# Hardware Detection, Partitioning & System Installer
+# Bootloaders & System Installer
+syslinux
+edk2-shell
 pciutils
 usbutils
 parted
