@@ -50,11 +50,16 @@ retroarch
 libretro-core-info
 
 
-# Android Containerization (Waydroid)
-waydroid
+# Android Containerization (Waydroid Engine Runtime)
+lxc
 dnsmasq
 nftables
-lxc
+iptables-nft
+python
+python-gobject
+git
+make
+
 
 # Ultra-Light Web Browser & RAM Optimization
 falkon

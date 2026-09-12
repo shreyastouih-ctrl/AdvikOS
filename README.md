@@ -1,6 +1,16 @@
 # AdvikOS 🎮
 
+[![Download AdvikOS ISO](https://img.shields.io/badge/Download-AdvikOS%20(ISO)-brightgreen?style=for-the-badge&logo=archlinux)](https://github.com/shreyastouih-ctrl/AdvikOS/releases/latest)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/shreyastouih-ctrl/AdvikOS/build-iso.yml?branch=main&style=for-the-badge)](https://github.com/shreyastouih-ctrl/AdvikOS/actions)
+
+### 📥 Direct ISO Download Link:
+👉 **[Download Latest AdvikOS ISO (advikos-x86_64.iso)](https://github.com/shreyastouih-ctrl/AdvikOS/releases/latest)**  
+*(Also available in the [Artifacts section](https://github.com/shreyastouih-ctrl/AdvikOS/actions) of every workflow run)*
+
+---
+
 **AdvikOS** is an ultra-lightweight, high-performance gaming operating system based on **Arch Linux**, tailored for computers with **1 GB RAM**.
+
 
 It brings together:
 - 🍷 **Windows Software & Games**: Full Wine integration with 32-bit & 64-bit multiarch.
