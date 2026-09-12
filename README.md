@@ -86,10 +86,3 @@ chmod +x build.sh
 ```
 The finished ISO will be generated in `./out/`.
 
----
-
-## Validation & Testing
-To run the automated validation test suite on Windows at any time:
-```powershell
-powershell -ExecutionPolicy Bypass -File .\test-advikos.ps1
-```

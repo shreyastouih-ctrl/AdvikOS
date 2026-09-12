@@ -45,13 +45,10 @@ winetricks
 lib32-mesa
 lib32-pipewire
 
-# Emulation (RetroArch + Cores for NES, SNES, GBA, Genesis)
+# Emulation (RetroArch Frontend & Cores)
 retroarch
 libretro-core-info
-libretro-fceumm
-libretro-snes9x
-libretro-gambatte
-libretro-genesis-plus-gx
+
 
 # Android Containerization (Waydroid)
 waydroid

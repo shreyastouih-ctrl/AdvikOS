@@ -30,8 +30,10 @@ jobs:
               echo '>> Setting up Arch mirrors...'
               echo 'Server = https://geo.mirror.pkgbuild.com/\$repo/os/\$arch' > /etc/pacman.d/mirrorlist
               
-              echo '>> Enabling multilib for 32-bit Wine...'
+              echo '>> Enabling multilib and chaotic-aur...'
               printf '\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n' >> /etc/pacman.conf
+              printf '\n[chaotic-aur]\nSigLevel = Never\nServer = https://geo-mirror.chaotic.cx/\$repo/\$arch\nServer = https://cdn-mirror.chaotic.cx/\$repo/\$arch\n' >> /etc/pacman.conf
+
               
               echo '>> Initializing keyring and installing archiso...'
               pacman-key --init
