@@ -32,10 +32,11 @@ xf86-video-nouveau
 labwc
 waybar
 foot
-pcmanfm-gtk3
+pcmanfm
 swaybg
 bemenu
-xwayland
+xorg-xwayland
+
 
 # Windows Compatibility Layer (Wine + 32-bit Multiarch)
 wine
