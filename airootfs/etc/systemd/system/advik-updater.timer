@@ -1,0 +1,12 @@
+[Unit]
+Description=Run AdvikOS System Update Every 60 Days (2 Months)
+
+[Timer]
+# Trigger 15 minutes after initial boot
+OnBootSec=15min
+# Trigger every 60 days (approx 2 months)
+OnUnitActiveSec=60d
+Persistent=true
+
+[Install]
+WantedBy=timers.target

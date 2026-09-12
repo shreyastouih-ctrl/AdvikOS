@@ -3,6 +3,8 @@ name: Build AdvikOS ISO
 on:
   push:
     branches: [ main, master ]
+  schedule:
+    - cron: '0 0 1 */2 *'  # Automatically rebuilds and updates AdvikOS every 2 months
   workflow_dispatch:
 
 permissions:
@@ -23,6 +25,7 @@ jobs:
       - name: Build ISO in Arch Linux Container
         run: |
           docker run --privileged --rm \
+            -v /dev:/dev \
             -v "${{ github.workspace }}:/advikos" \
             archlinux:latest \
             bash -c "
@@ -34,10 +37,10 @@ jobs:
               printf '\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n' >> /etc/pacman.conf
               printf '\n[chaotic-aur]\nSigLevel = Never\nServer = https://geo-mirror.chaotic.cx/\$repo/\$arch\nServer = https://cdn-mirror.chaotic.cx/\$repo/\$arch\n' >> /etc/pacman.conf
 
-              
               echo '>> Initializing keyring and installing archiso...'
               pacman-key --init
               pacman-key --populate archlinux
+              pacman -Sy --noconfirm archlinux-keyring || true
               pacman -Syu --noconfirm archiso dos2unix
               
               echo '>> Sanitizing line endings...'
@@ -51,25 +54,28 @@ jobs:
 
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: AdvikOS-Bootable-ISO
           path: out/*.iso
           retention-days: 14
 
-      - name: Create GitHub Release
+      - name: Create GitHub Release (Automated Bi-Monthly Update)
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        if: success()
         with:
-          tag_name: v1.0.0
-          name: AdvikOS v1.0.0 (1GB RAM Edition)
+          tag_name: release-${{ github.run_number }}
+          name: AdvikOS Gaming Edition (Build #${{ github.run_number }})
           body: |
             ## AdvikOS 🎮 (1GB RAM Gaming & Android OS)
-            - 🍷 Windows Software / Wine support
+            - 🍷 Windows Programs / Wine support
             - 🤖 Waydroid Android Container
-            - 🕹️ RetroArch Emulation
+            - 🕹️ RetroArch Emulation Hub
             - 🌐 Falkon Web Browser
             - ⚡ ZRAM Memory Multiplier (1GB -> ~2.4GB usable RAM)
             - 💾 Windows NTFS Reader/Writer
+            - 🔄 Auto-updates every 2-3 months
+            - 🐞 Built-in Error & Crash Reporter
           files: out/*.iso
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

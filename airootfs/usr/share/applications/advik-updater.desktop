@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Check for AdvikOS Updates
+Comment=Update system packages, kernel, Wine, and graphics drivers
+Exec=sudo /usr/local/bin/advik-updater
+Icon=system-software-update
+Terminal=true
+Categories=System;

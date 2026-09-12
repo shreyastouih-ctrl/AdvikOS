@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# AdvikOS Automated Error & Crash Reporter
+# Captures system, gaming, and container diagnostics to submit for bug fixing
+# ==============================================================================
+
+REPORT_FILE="/tmp/advikos-error-report.txt"
+GITHUB_REPO="https://github.com/shreyastouih-ctrl/AdvikOS/issues/new"
+
+echo "========================================================="
+echo "         AdvikOS Automated Error & Crash Reporter        "
+echo "========================================================="
+echo ">> Gathering diagnostic information..."
+
+{
+  echo "=== AdvikOS Diagnostic Report ==="
+  echo "Timestamp  : $(date -u)"
+  echo "Kernel     : $(uname -a)"
+  echo "Uptime     : $(uptime)"
+  echo ""
+  echo "=== Memory & ZRAM Status ==="
+  free -h
+  echo ""
+  zramctl 2>/dev/null || echo "ZRAM inactive"
+  echo ""
+  echo "=== Graphics & Display ==="
+  lspci 2>/dev/null | grep -iE 'vga|3d|display' || echo "No PCI GPU detected"
+  echo "Compositor : Labwc (Wayland)"
+  echo ""
+  echo "=== Recent Critical System Errors (journalctl -p 3) ==="
+  journalctl -p 3 -xb -n 40 --no-pager 2>/dev/null || echo "No critical journal errors found."
+  echo ""
+  echo "=== Waydroid Container Status ==="
+  systemctl status waydroid-container --no-pager 2>/dev/null || echo "Waydroid service not running"
+  echo ""
+  echo "=== EarlyOOM Logs ==="
+  journalctl -u earlyoom -n 15 --no-pager 2>/dev/null || echo "No earlyoom events."
+} > "$REPORT_FILE"
+
+echo ">> Diagnostics saved to: $REPORT_FILE"
+
+# Show GUI if available
+if [ -n "$WAYLAND_DISPLAY" ] || [ -n "$DISPLAY" ]; then
+    if command -v zenity &>/dev/null; then
+        zenity --text-info --title="AdvikOS Crash & Error Reporter" \
+               --filename="$REPORT_FILE" --width=600 --height=450 \
+               --ok-label="Submit to GitHub" --cancel-label="Close"
+
+        if [ $? -eq 0 ]; then
+            # Open browser to GitHub Issues page
+            xdg-open "${GITHUB_REPO}?title=[Crash+Report]+AdvikOS+System+Diagnostic" 2>/dev/null || falkon "${GITHUB_REPO}" &
+        fi
+        exit 0
+    fi
+fi
+
+cat "$REPORT_FILE"
+echo ""
+echo ">> To submit this error to the developer, visit:"
+echo "   $GITHUB_REPO"

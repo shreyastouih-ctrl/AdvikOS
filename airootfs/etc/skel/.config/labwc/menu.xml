@@ -65,6 +65,12 @@
       <item label="System Monitor (Htop)">
         <action name="Execute" command="foot htop" />
       </item>
+      <item label="Check for System Updates">
+        <action name="Execute" command="foot sudo /usr/local/bin/advik-updater" />
+      </item>
+      <item label="Report System Error or Bug">
+        <action name="Execute" command="/usr/local/bin/advik-report-error" />
+      </item>
     </menu>
     <separator />
     <item label="Power Off">

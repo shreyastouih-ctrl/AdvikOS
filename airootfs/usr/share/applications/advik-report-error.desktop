@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Report System Error
+Comment=Capture system diagnostics and report errors to AdvikOS GitHub
+Exec=/usr/local/bin/advik-report-error
+Icon=tools-report-bug
+Terminal=false
+Categories=System;Utility;

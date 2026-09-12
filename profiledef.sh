@@ -26,4 +26,6 @@ file_permissions=(
   ["/usr/local/bin/advik-menu"]="0:0:755"
   ["/usr/local/bin/advik-waydroid-init"]="0:0:755"
   ["/usr/local/bin/advik-installer"]="0:0:755"
+  ["/usr/local/bin/advik-report-error"]="0:0:755"
+  ["/usr/local/bin/advik-updater"]="0:0:755"
 )

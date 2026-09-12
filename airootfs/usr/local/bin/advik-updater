@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# AdvikOS Scheduled System & Gaming Updater (Runs every 2-3 Months)
+# Updates Linux kernel, Wine, RetroArch, and drivers with low-RAM optimization
+# ==============================================================================
+set -e
+
+# Elevate privileges if needed
+if [ "$(id -u)" -ne 0 ]; then
+    exec sudo "$0" "$@"
+fi
+
+echo "========================================================="
+echo "        AdvikOS System & Game Engine Updater             "
+echo "========================================================="
+echo ">> Checking internet connection..."
+if ! ping -c 1 1.1.1.1 &>/dev/null; then
+    echo ">> Error: No internet connection. Please connect to Wi-Fi/Ethernet."
+    exit 1
+fi
+
+echo ">> Refreshing package databases..."
+pacman -Sy
+
+echo ">> Upgrading system packages, kernel, Wine, and graphics drivers..."
+pacman -Su --noconfirm
+
+echo ">> Cleaning old cached packages to save disk space..."
+pacman -Sc --noconfirm
+
+echo ">> Re-verifying ZRAM memory compression..."
+systemctl restart systemd-zram-setup@zram0.service 2>/dev/null || true
+
+echo "========================================================="
+echo "   AdvikOS is up to date! System optimized for gaming.   "
+echo "========================================================="
+
+if [ -n "$WAYLAND_DISPLAY" ] || [ -n "$DISPLAY" ]; then
+    if command -v zenity &>/dev/null; then
+        zenity --info --title="AdvikOS Update Complete" \
+               --text="Your system has been successfully updated with the latest gaming, Wine, and security patches."
+    fi
+fi
