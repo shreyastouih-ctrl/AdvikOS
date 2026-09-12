@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openbox_menu>
+  <menu id="root-menu" label="AdvikOS">
+    <item label="All Applications (Search)">
+      <action name="Execute" command="wofi --show drun --prompt 'Search Apps...'" />
+    </item>
+    <item label="Advik Game Hub">
+      <action name="Execute" command="/usr/local/bin/advik-menu" />
+    </item>
+    <item label="Install AdvikOS to Disk (Hardware Detect)">
+      <action name="Execute" command="sudo /usr/local/bin/advik-installer" />
+    </item>
+    <separator />
+    <menu id="games-menu" label="Gaming and Emulation">
+      <item label="RetroArch">
+        <action name="Execute" command="retroarch" />
+      </item>
+      <item label="Android Apps (Waydroid)">
+        <action name="Execute" command="waydroid show-full-ui" />
+      </item>
+      <item label="Wine Windows Explorer">
+        <action name="Execute" command="wine explorer" />
+      </item>
+      <item label="Configure Wine">
+        <action name="Execute" command="winecfg" />
+      </item>
+    </menu>
+    <menu id="apps-menu" label="Accessories and Tools">
+      <item label="Text Editor (Mousepad)">
+        <action name="Execute" command="mousepad" />
+      </item>
+      <item label="Archive Manager (Zip/Rar/7z)">
+        <action name="Execute" command="xarchiver" />
+      </item>
+      <item label="Image Viewer (Viewnior)">
+        <action name="Execute" command="viewnior" />
+      </item>
+      <item label="Calculator">
+        <action name="Execute" command="galculator" />
+      </item>
+      <item label="Take Screenshot">
+        <action name="Execute" command="grim" />
+      </item>
+    </menu>
+    <item label="Web Browser (Falkon)">
+      <action name="Execute" command="falkon" />
+    </item>
+    <item label="File Manager (PCManFM)">
+      <action name="Execute" command="pcmanfm" />
+    </item>
+    <item label="Terminal (Foot)">
+      <action name="Execute" command="foot" />
+    </item>
+    <separator />
+    <menu id="settings-menu" label="Settings and Hardware">
+      <item label="Display and Resolution">
+        <action name="Execute" command="wdisplays" />
+      </item>
+      <item label="Volume and Audio Mixer">
+        <action name="Execute" command="pavucontrol" />
+      </item>
+      <item label="Setup Waydroid Container">
+        <action name="Execute" command="foot /usr/local/bin/advik-waydroid-init" />
+      </item>
+      <item label="System Monitor (Htop)">
+        <action name="Execute" command="foot htop" />
+      </item>
+    </menu>
+    <separator />
+    <item label="Power Off">
+      <action name="Execute" command="poweroff" />
+    </item>
+    <item label="Restart">
+      <action name="Execute" command="reboot" />
+    </item>
+  </menu>
+</openbox_menu>

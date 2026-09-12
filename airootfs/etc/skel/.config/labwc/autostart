@@ -1,0 +1,23 @@
+#!/bin/sh
+# AdvikOS Wayland Autostart Session
+# Target idle RAM: < 100 MB
+
+# Desktop Icons & Desktop Manager
+pcmanfm-gtk3 --desktop &
+
+# Notification Daemon
+mako &
+
+# Network Manager System Tray Applet
+nm-applet --indicator &
+
+# Lightweight Waybar top status panel
+waybar &
+
+# Start Pipewire audio server
+pipewire &
+wireplumber &
+
+# Pre-initialize Wine in background silently after boot
+(sleep 4 && wineboot -u) &
+

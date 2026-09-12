@@ -1,0 +1,31 @@
+#!/bin/sh
+# ==============================================================================
+# AdvikOS - Low-RAM Waydroid Initializer
+# Downloads minimal LineageOS image without heavy GApps
+# ==============================================================================
+
+echo "========================================================"
+echo "          AdvikOS - Android (Waydroid) Setup           "
+echo "========================================================"
+echo "Configuring minimal Android container for 1 GB RAM..."
+echo ""
+
+# Ensure binder modules are loaded
+sudo modprobe binder_linux || true
+sudo modprobe ashmem_linux || true
+
+# Initialize Waydroid with minimal image (NO Google Play Services to save 400MB RAM)
+echo ">> Downloading minimal Android system image..."
+sudo waydroid init -s VANILLA
+
+# Enable & restart Waydroid container service
+echo ">> Starting Waydroid container service..."
+sudo systemctl enable --now waydroid-container.service
+sudo systemctl restart waydroid-container.service
+
+echo ""
+echo "========================================================"
+echo "  Success! Android is ready. You can now launch it from "
+echo "  the AdvikOS menu or run 'waydroid show-full-ui'.       "
+echo "========================================================"
+read -p "Press Enter to exit..."

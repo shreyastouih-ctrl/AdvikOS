@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Wine Windows Program Loader
+Comment=Run Windows applications on AdvikOS
+Exec=wine start /unix %f
+MimeType=application/x-ms-dos-executable;application/x-msi;application/x-ms-shortcut;
+Icon=wine
+NoDisplay=false
+StartupNotify=true
+Categories=Utility;

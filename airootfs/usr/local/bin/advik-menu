@@ -1,0 +1,39 @@
+#!/bin/sh
+# ==============================================================================
+# AdvikOS Game & Program Menu (Wayland Native via bemenu)
+# ==============================================================================
+
+CHOICE=$(printf "1. 🕹️ RetroArch (Emulators)\n2. 🍷 Windows Program / Game (.exe)\n3. 🤖 Android Apps (Waydroid)\n4. 🌐 Web Browser (Falkon)\n5. 📁 File Manager (PCManFM)\n6. 💻 Terminal (Foot)\n7. 🔧 Setup Waydroid (One-Time)\n8. ⚡ System Monitor (Htop)\n9. ⏻ Power Off" | bemenu -p "AdvikOS >>" --tb "#89b4fa" --tf "#11111b" --fb "#11111b" --ff "#cdd6f4" --nb "#1e1e2e" --nf "#cdd6f4" --hb "#89b4fa" --hf "#11111b")
+
+case "$CHOICE" in
+  "1. 🕹️ RetroArch (Emulators)")
+    retroarch &
+    ;;
+  "2. 🍷 Windows Program / Game (.exe)")
+    EXE_FILE=$(zenity --file-selection --title="Select Windows .EXE to run with Wine" --file-filter="Windows Executables (*.exe) | *.exe" 2>/dev/null)
+    if [ -n "$EXE_FILE" ]; then
+      wine "$EXE_FILE" &
+    fi
+    ;;
+  "3. 🤖 Android Apps (Waydroid)")
+    waydroid show-full-ui &
+    ;;
+  "4. 🌐 Web Browser (Falkon)")
+    falkon &
+    ;;
+  "5. 📁 File Manager (PCManFM)")
+    pcmanfm &
+    ;;
+  "6. 💻 Terminal (Foot)")
+    foot &
+    ;;
+  "7. 🔧 Setup Waydroid (One-Time)")
+    foot /usr/local/bin/advik-waydroid-init &
+    ;;
+  "8. ⚡ System Monitor (Htop)")
+    foot htop &
+    ;;
+  "9. ⏻ Power Off")
+    poweroff
+    ;;
+esac

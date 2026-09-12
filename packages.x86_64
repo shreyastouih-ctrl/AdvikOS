@@ -1,0 +1,103 @@
+# ==============================================================================
+# AdvikOS Package List (Arch Linux x86_64)
+# ==============================================================================
+
+# Core System & Drivers
+base
+linux
+linux-firmware
+networkmanager
+sudo
+nano
+curl
+wget
+htop
+
+# Audio Architecture (Pipewire is ultra-low latency & light)
+pipewire
+pipewire-pulse
+pipewire-alsa
+wireplumber
+
+# Graphics & Drivers
+mesa
+vulkan-intel
+vulkan-radeon
+libva-mesa-driver
+xf86-video-intel
+xf86-video-amdgpu
+xf86-video-nouveau
+
+# Wayland Compositor & Ultra-Light Desktop (~35 MB RAM)
+labwc
+waybar
+foot
+pcmanfm-gtk3
+swaybg
+bemenu
+xwayland
+
+# Windows Compatibility Layer (Wine + 32-bit Multiarch)
+wine
+wine-gecko
+wine-mono
+winetricks
+lib32-mesa
+lib32-pipewire
+
+# Emulation (RetroArch + Cores for NES, SNES, GBA, Genesis)
+retroarch
+libretro-core-info
+libretro-fceumm
+libretro-snes9x
+libretro-gambatte
+libretro-genesis-plus-gx
+
+# Android Containerization (Waydroid)
+waydroid
+dnsmasq
+nftables
+lxc
+
+# Ultra-Light Web Browser & RAM Optimization
+falkon
+zram-generator
+earlyoom
+
+# Windows File System Support (NTFS Reader/Writer, FAT32, exFAT & Automount)
+ntfs-3g
+dosfstools
+exfatprogs
+udisks2
+gvfs
+
+# Desktop Environment App Suite & Utilities
+wofi
+mako
+network-manager-applet
+mousepad
+xarchiver
+p7zip
+unzip
+unrar
+viewnior
+galculator
+pavucontrol
+wdisplays
+grim
+slurp
+wl-clipboard
+adwaita-icon-theme
+ttf-dejavu
+ttf-liberation
+
+# Hardware Detection, Partitioning & System Installer
+pciutils
+usbutils
+parted
+rsync
+grub
+efibootmgr
+yad
+zenity
+

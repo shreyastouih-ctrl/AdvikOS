@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Install AdvikOS
+Comment=Detect Hardware and Install AdvikOS to Disk
+Exec=sudo /usr/local/bin/advik-installer
+Icon=system-software-install
+Terminal=false
+Categories=System;

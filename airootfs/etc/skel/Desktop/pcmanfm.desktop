@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=This PC & Files
+Comment=Open File Manager and Drives
+Exec=pcmanfm
+Icon=system-file-manager
+Terminal=false
+Categories=System;FileManager;

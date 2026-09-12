@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<labwc_config>
+  <core>
+    <decoration>server</decoration>
+    <gap>2</gap>
+  </core>
+
+  <keyboard>
+    <default />
+    <!-- Super+Space opens Application Start Menu -->
+    <keybind key="W-space">
+      <action name="Execute" command="wofi --show drun" />
+    </keybind>
+    <!-- Super+T opens terminal -->
+    <keybind key="W-t">
+      <action name="Execute" command="foot" />
+    </keybind>
+    <!-- Super+G opens Advik Gaming Menu -->
+    <keybind key="W-g">
+      <action name="Execute" command="/usr/local/bin/advik-menu" />
+    </keybind>
+    <!-- Super+W opens Web Browser -->
+    <keybind key="W-w">
+      <action name="Execute" command="falkon" />
+    </keybind>
+    <!-- Super+E opens File Manager -->
+    <keybind key="W-e">
+      <action name="Execute" command="pcmanfm" />
+    </keybind>
+    <!-- Print key takes screenshot -->
+    <keybind key="Print">
+      <action name="Execute" command="grim" />
+    </keybind>
+    <!-- Alt+F4 closes window -->
+    <keybind key="A-F4">
+      <action name="Close" />
+    </keybind>
+  </keyboard>
+
+  <mouse>
+    <default />
+    <context name="Root">
+      <mousebind button="Right" action="Press">
+        <action name="ShowMenu" menu="root-menu" />
+      </mousebind>
+    </context>
+  </mouse>
+
+  <theme>
+    <name>Adwaita-dark</name>
+    <cornerRadius>4</cornerRadius>
+  </theme>
+</labwc_config>

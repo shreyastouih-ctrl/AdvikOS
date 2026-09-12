@@ -1,0 +1,63 @@
+* {
+  border: none;
+  border-radius: 0;
+  font-family: monospace;
+  font-size: 13px;
+  min-height: 0;
+}
+
+window#waybar {
+  background-color: #11111b;
+  border-bottom: 2px solid #313244;
+  color: #cdd6f4;
+}
+
+#custom-menu {
+  background-color: #89b4fa;
+  color: #11111b;
+  font-weight: bold;
+  padding: 0 10px;
+  border-radius: 4px;
+  margin: 2px 4px;
+}
+
+#custom-retroarch, #custom-waydroid, #custom-wine, #custom-browser {
+  background-color: #1e1e2e;
+  padding: 0 8px;
+  border-radius: 4px;
+  margin: 2px 2px;
+}
+
+#custom-retroarch:hover, #custom-waydroid:hover, #custom-wine:hover, #custom-browser:hover {
+  background-color: #45475a;
+}
+
+#clock {
+  font-weight: bold;
+  color: #f9e2af;
+}
+
+#cpu {
+  color: #a6e3a1;
+  padding: 0 6px;
+}
+
+#memory {
+  color: #fab387;
+  padding: 0 6px;
+  font-weight: bold;
+}
+
+#wireplumber {
+  color: #89dceb;
+  padding: 0 6px;
+}
+
+#custom-power {
+  background-color: #f38ba8;
+  color: #11111b;
+  font-weight: bold;
+  padding: 0 10px;
+  border-radius: 4px;
+  margin: 2px 4px;
+}

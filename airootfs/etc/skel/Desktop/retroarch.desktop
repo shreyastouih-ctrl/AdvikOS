@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=RetroArch
+Comment=Retro Video Game Emulation Frontend
+Exec=retroarch
+Icon=retroarch
+Terminal=false
+Categories=Game;Emulator;

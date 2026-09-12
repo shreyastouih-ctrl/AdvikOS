@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Web Browser
+Comment=Falkon Web Browser
+Exec=falkon
+Icon=falkon
+Terminal=false
+Categories=Network;WebBrowser;

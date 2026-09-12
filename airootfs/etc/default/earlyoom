@@ -1,0 +1,3 @@
+# AdvikOS EarlyOOM configuration
+# Prevents complete system lockup when browsing or gaming on 1GB RAM
+EARLYOOM_ARGS="-m 4 -s 100 --avoid '^(labwc|waybar|wine)$'"

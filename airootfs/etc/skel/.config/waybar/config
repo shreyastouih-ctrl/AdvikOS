@@ -1,0 +1,59 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 28,
+  "spacing": 4,
+  "modules-left": [
+    "custom/start",
+    "custom/menu",
+    "custom/retroarch",
+    "custom/waydroid",
+    "custom/wine",
+    "custom/browser"
+  ],
+  "modules-center": ["clock"],
+  "modules-right": ["tray", "cpu", "memory", "wireplumber", "custom/power"],
+
+  "custom/start": {
+    "format": "🚀 Start",
+    "on-click": "wofi --show drun"
+  },
+  "custom/menu": {
+    "format": "🎮 Game Hub",
+    "on-click": "/usr/local/bin/advik-menu"
+  },
+  "custom/retroarch": {
+    "format": "🕹️ RetroArch",
+    "on-click": "retroarch"
+  },
+  "custom/waydroid": {
+    "format": "🤖 Android",
+    "on-click": "waydroid show-full-ui"
+  },
+  "custom/wine": {
+    "format": "🍷 Wine",
+    "on-click": "wine explorer"
+  },
+  "custom/browser": {
+    "format": "🌐 Web",
+    "on-click": "falkon"
+  },
+  "clock": {
+    "format": "{:%H:%M | %d %b}"
+  },
+  "cpu": {
+    "format": "CPU: {usage}%",
+    "interval": 2
+  },
+  "memory": {
+    "format": "RAM: {used:0.1f}G/{total:0.1f}G",
+    "interval": 2
+  },
+  "wireplumber": {
+    "format": "VOL: {volume}%"
+  },
+  "custom/power": {
+    "format": "⏻",
+    "on-click": "poweroff"
+  }
+}

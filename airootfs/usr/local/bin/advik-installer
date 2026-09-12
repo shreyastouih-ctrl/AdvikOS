@@ -1,0 +1,246 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# AdvikOS Hardware Detection & Intelligent System Installer
+# Detects CPU, RAM, GPU, and Storage -> Recommends Tailored OS Configuration
+# ==============================================================================
+set -e
+
+# Ensure running as root
+if [ "$(id -u)" -ne 0 ]; then
+    echo ">> Elevating privileges..."
+    exec sudo "$0" "$@"
+fi
+
+# -------------------------------------------------------------
+# 1. HARDWARE DETECTION ENGINE
+# -------------------------------------------------------------
+echo "========================================================="
+echo "   AdvikOS Hardware Diagnostics & Recommendation Engine   "
+echo "========================================================="
+echo ">> Scanning system hardware..."
+
+# RAM Detection (in Megabytes and Gigabytes)
+MEM_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+MEM_MB=$((MEM_KB / 1024))
+MEM_GB=$(awk "BEGIN {printf \"%.1f\", ${MEM_MB}/1024}")
+
+# CPU Detection
+CPU_MODEL=$(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | sed 's/^[ \t]*//')
+CPU_CORES=$(nproc)
+ARCH=$(uname -m)
+
+# GPU Detection
+if command -v lspci &>/dev/null; then
+    GPU_NAME=$(lspci | grep -iE 'vga|3d|display' | head -n1 | cut -d: -f3 | sed 's/^[ \t]*//')
+else
+    GPU_NAME="Generic Graphics Adapter"
+fi
+[ -z "$GPU_NAME" ] && GPU_NAME="Generic Graphics Controller"
+
+# Boot Mode (UEFI vs BIOS)
+if [ -d "/sys/firmware/efi" ]; then
+    BOOT_MODE="UEFI (Modern 64-bit)"
+else
+    BOOT_MODE="Legacy BIOS (MBR)"
+fi
+
+# Detect Storage Disks
+DISKS=$(lsblk -d -n -o NAME,SIZE,TYPE,MODEL | grep -E 'disk' | awk '{print "/dev/" $1 " (" $2 ", " $4 ")"}')
+NTFS_PARTS=$(lsblk -f -n -o NAME,FSTYPE,LABEL | grep -i 'ntfs' || true)
+
+# -------------------------------------------------------------
+# 2. INTELLIGENT OS RECOMMENDATION ENGINE
+# -------------------------------------------------------------
+if [ "$MEM_MB" -le 1400 ]; then
+    RECOMMENDED_PROFILE="AdvikOS Ultra-Low RAM Edition (1 GB Presets)"
+    PROFILE_ID="LOW_RAM"
+    PROFILE_DESC="Optimized for 1GB RAM. Ultra-compressed ZRAM (150%), lightweight Falkon browser, on-demand Waydroid without Google Play, RetroArch with 2D efficiency."
+    RECOMMENDED_ZRAM="150"
+    RECOMMENDED_SWAPPINESS="180"
+elif [ "$MEM_MB" -le 3500 ]; then
+    RECOMMENDED_PROFILE="AdvikOS Balanced Gaming Edition (2 GB - 4 GB Presets)"
+    PROFILE_ID="BALANCED"
+    PROFILE_DESC="Optimized for 2GB - 4GB RAM. Balanced ZRAM (100%), full RetroArch emulation with CRT shaders, standard Waydroid Android container."
+    RECOMMENDED_ZRAM="100"
+    RECOMMENDED_SWAPPINESS="100"
+else
+    RECOMMENDED_PROFILE="AdvikOS Performance Edition (Gaming Rig Presets)"
+    PROFILE_ID="PERFORMANCE"
+    PROFILE_DESC="Optimized for 4GB+ RAM. Full Vulkan DXVK Wine gaming, high-end RetroArch upscaling, unlimited Waydroid container performance."
+    RECOMMENDED_ZRAM="50"
+    RECOMMENDED_SWAPPINESS="60"
+fi
+
+# Format Hardware Report Text
+DIAG_REPORT="Detected Hardware:
+----------------------------------------
+• Memory (RAM) : ${MEM_MB} MB (~${MEM_GB} GB)
+• Processor    : ${CPU_MODEL} (${CPU_CORES} Cores, ${ARCH})
+• Graphics GPU : ${GPU_NAME}
+• Boot Firmware: ${BOOT_MODE}
+
+Recommended OS Mode for this PC:
+----------------------------------------
+⭐ ${RECOMMENDED_PROFILE}
+${PROFILE_DESC}
+"
+
+echo "$DIAG_REPORT"
+
+# -------------------------------------------------------------
+# 3. INTERACTIVE GUI / TUI INSTALLATION WIZARD
+# -------------------------------------------------------------
+USE_GUI=false
+if [ -n "$WAYLAND_DISPLAY" ] || [ -n "$DISPLAY" ]; then
+    if command -v zenity &>/dev/null; then
+        USE_GUI=true
+    fi
+fi
+
+if [ "$USE_GUI" = true ]; then
+    # Step 1: Show Hardware Diagnostics & Recommendation
+    zenity --info --title="AdvikOS Hardware Diagnostic & Recommendation" \
+           --text="$DIAG_REPORT" --width=520 --height=380
+
+    # Step 2: Confirm or change Profile
+    SELECTED_PROFILE=$(zenity --list --title="Choose AdvikOS Edition" \
+        --text="AdvikOS automatically detected your hardware. Confirm or choose your edition:" \
+        --radiolist --column="Select" --column="Edition" --column="Description" \
+        $([ "$PROFILE_ID" = "LOW_RAM" ] && echo "TRUE" || echo "FALSE") "Ultra-Low 1GB" "ZRAM 150%, Falkon, On-demand Waydroid" \
+        $([ "$PROFILE_ID" = "BALANCED" ] && echo "TRUE" || echo "FALSE") "Balanced 2-4GB" "ZRAM 100%, Standard Gaming Presets" \
+        $([ "$PROFILE_ID" = "PERFORMANCE" ] && echo "TRUE" || echo "FALSE") "Performance 4GB+" "Vulkan DXVK, Maximum Performance" \
+        --width=600 --height=280)
+
+    [ -z "$SELECTED_PROFILE" ] && exit 0
+
+    # Step 3: Select Target Disk
+    DISK_LIST=""
+    while IFS= read -r line; do
+        DEV=$(echo "$line" | awk '{print $1}')
+        INFO=$(echo "$line" | cut -d' ' -f2-)
+        DISK_LIST="$DISK_LIST FALSE $DEV $INFO"
+    done <<< "$DISKS"
+
+    TARGET_DEV=$(zenity --list --title="Select Target Installation Drive" \
+        --text="Select the drive to install AdvikOS on.\nWARNING: All existing data on this drive will be replaced!" \
+        --radiolist --column="Select" --column="Drive" --column="Details" \
+        $DISK_LIST --width=550 --height=260)
+
+    [ -z "$TARGET_DEV" ] && exit 0
+
+    # Warning if Windows NTFS partitions exist
+    if [ -n "$NTFS_PARTS" ]; then
+        zenity --warning --title="Windows NTFS Drives Detected" \
+            --text="Existing Windows NTFS partition detected:\n$NTFS_PARTS\n\nEnsure you have selected the correct target disk before proceeding!" \
+            --width=450
+    fi
+
+    # Step 4: User Configuration
+    USER_CONFIG=$(zenity --forms --title="AdvikOS User Setup" \
+        --text="Configure your gaming user account:" \
+        --add-entry="User Name" \
+        --add-password="Password" \
+        --add-password="Confirm Password")
+
+    [ -z "$USER_CONFIG" ] && exit 0
+    NEW_USER=$(echo "$USER_CONFIG" | cut -d'|' -f1)
+    NEW_PASS=$(echo "$USER_CONFIG" | cut -d'|' -f2)
+    CONFIRM_PASS=$(echo "$USER_CONFIG" | cut -d'|' -f3)
+
+    if [ "$NEW_PASS" != "$CONFIRM_PASS" ]; then
+        zenity --error --text="Passwords do not match. Installation aborted."
+        exit 1
+    fi
+
+    # Step 5: Final Confirmation
+    zenity --question --title="Confirm Installation" \
+        --text="Ready to install AdvikOS with $SELECTED_PROFILE on $TARGET_DEV.\n\nAre you sure you want to continue?" \
+        --width=450 || exit 0
+
+    INSTALL_PROGRESS=true
+else
+    # Terminal TUI Mode Fallback
+    echo "========================================================="
+    echo "Selected Profile: $RECOMMENDED_PROFILE"
+    echo "========================================================="
+    echo "Available Storage Disks:"
+    echo "$DISKS"
+    echo ""
+    read -p "Enter Target Drive (e.g., /dev/sda): " TARGET_DEV
+    read -p "Enter Desired Username (default: gamer): " NEW_USER
+    NEW_USER=${NEW_USER:-gamer}
+    read -s -p "Enter Password: " NEW_PASS
+    echo ""
+    read -p "Type 'yes' to format $TARGET_DEV and install AdvikOS: " CONFIRM
+    [ "$CONFIRM" != "yes" ] && exit 0
+fi
+
+# -------------------------------------------------------------
+# 4. DEPLOYMENT & HARDWARE-TAILORED CONFIGURATION
+# -------------------------------------------------------------
+echo ">> Partitioning target disk $TARGET_DEV..."
+wipefs -a "$TARGET_DEV" || true
+parted -s "$TARGET_DEV" mklabel gpt
+parted -s "$TARGET_DEV" mkpart ESP fat32 1MiB 512MiB
+parted -s "$TARGET_DEV" set 1 esp on
+parted -s "$TARGET_DEV" mkpart primary ext4 512MiB 100%
+
+PART_PREFIX="${TARGET_DEV}"
+[[ "$TARGET_DEV" =~ [0-9]$ ]] && PART_PREFIX="${TARGET_DEV}p"
+BOOT_PART="${PART_PREFIX}1"
+ROOT_PART="${PART_PREFIX}2"
+
+echo ">> Formatting partitions..."
+mkfs.vfat -F32 "$BOOT_PART"
+mkfs.ext4 -F -L "AdvikOS" "$ROOT_PART"
+
+echo ">> Mounting target filesystems..."
+TARGET_MOUNT="/mnt/advikos-target"
+mkdir -p "$TARGET_MOUNT"
+mount "$ROOT_PART" "$TARGET_MOUNT"
+mkdir -p "$TARGET_MOUNT/boot/efi"
+mount "$BOOT_PART" "$TARGET_MOUNT/boot/efi"
+
+echo ">> Copying AdvikOS system files to target..."
+rsync -aAXv --exclude="/mnt/*" --exclude="/proc/*" --exclude="/sys/*" --exclude="/dev/*" --exclude="/tmp/*" / "$TARGET_MOUNT/"
+
+# Write tailored hardware memory configuration to target
+cat << EOF > "$TARGET_MOUNT/etc/systemd/zram-generator.conf"
+# Auto-generated by AdvikOS Installer for detected hardware
+[zram0]
+zram-size = ram * $(awk "BEGIN {print ${RECOMMENDED_ZRAM}/100}")
+compression-algorithm = zstd
+swap-priority = 100
+fs-type = swap
+EOF
+
+cat << EOF > "$TARGET_MOUNT/etc/sysctl.d/99-advikos-lowram.conf"
+# Auto-generated memory tuning based on hardware scan
+vm.swappiness = ${RECOMMENDED_SWAPPINESS}
+vm.vfs_cache_pressure = 50
+vm.watermark_scale_factor = 125
+vm.dirty_background_ratio = 5
+vm.dirty_ratio = 10
+EOF
+
+# Setup User
+chroot "$TARGET_MOUNT" useradd -m -G wheel -s /bin/bash "$NEW_USER" || true
+echo "${NEW_USER}:${NEW_PASS}" | chroot "$TARGET_MOUNT" chpasswd
+echo "root:${NEW_PASS}" | chroot "$TARGET_MOUNT" chpasswd
+
+# Install Bootloader
+if [ -d "/sys/firmware/efi" ]; then
+    chroot "$TARGET_MOUNT" grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=AdvikOS --recheck
+else
+    chroot "$TARGET_MOUNT" grub-install --target=i386-pc "$TARGET_DEV" --recheck
+fi
+chroot "$TARGET_MOUNT" grub-mkconfig -o /boot/grub/grub.cfg
+
+echo "========================================================="
+echo "  AdvikOS successfully installed with $RECOMMENDED_PROFILE!"
+echo "========================================================="
+
+if [ "$USE_GUI" = true ]; then
+    zenity --info --title="Installation Finished" \
+           --text="AdvikOS has been successfully installed and tailored for your hardware!\n\nYou can now restart your computer to begin gaming."
+fi

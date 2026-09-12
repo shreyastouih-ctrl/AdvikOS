@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Advik Game Hub
+Comment=Launch Games and Emulators
+Exec=/usr/local/bin/advik-menu
+Icon=applications-games
+Terminal=false
+Categories=Game;
