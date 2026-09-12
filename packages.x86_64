@@ -82,10 +82,8 @@ xarchiver
 p7zip
 unzip
 unrar
-viewnior
-galculator
+feh
 pavucontrol
-wdisplays
 grim
 slurp
 wl-clipboard
@@ -100,6 +98,6 @@ parted
 rsync
 grub
 efibootmgr
-yad
 zenity
+
 

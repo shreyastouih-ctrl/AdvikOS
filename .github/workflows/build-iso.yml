@@ -25,6 +25,7 @@ jobs:
 
       - name: Build ISO in Arch Linux Container
         run: |
+          set -o pipefail
           docker run --privileged --rm \
             -v /dev:/dev \
             -v "${{ github.workspace }}:/advikos" \

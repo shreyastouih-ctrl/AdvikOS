@@ -32,11 +32,8 @@
       <item label="Archive Manager (Zip/Rar/7z)">
         <action name="Execute" command="xarchiver" />
       </item>
-      <item label="Image Viewer (Viewnior)">
-        <action name="Execute" command="viewnior" />
-      </item>
-      <item label="Calculator">
-        <action name="Execute" command="galculator" />
+      <item label="Image Viewer (Feh)">
+        <action name="Execute" command="feh" />
       </item>
       <item label="Take Screenshot">
         <action name="Execute" command="grim" />
@@ -53,9 +50,6 @@
     </item>
     <separator />
     <menu id="settings-menu" label="Settings and Hardware">
-      <item label="Display and Resolution">
-        <action name="Execute" command="wdisplays" />
-      </item>
       <item label="Volume and Audio Mixer">
         <action name="Execute" command="pavucontrol" />
       </item>
